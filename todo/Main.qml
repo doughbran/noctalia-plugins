@@ -58,6 +58,10 @@ Item {
       if (!pluginApi.pluginSettings.exportPath)
         pluginApi.pluginSettings.exportPath = "~/Documents";
 
+      // Initialize export empty sections setting
+      if (pluginApi.pluginSettings.exportEmptySections === undefined)
+        pluginApi.pluginSettings.exportEmptySections = false;
+
       // Initialize priority colors
       if (!pluginApi.pluginSettings.priorityColors) {
         pluginApi.pluginSettings.priorityColors = {
@@ -591,7 +595,7 @@ Item {
       // Write file
       var base64 = Qt.btoa(markdownContent);
       currentExportPath = filePath;
-      exportProcess.command = ["sh", "-c", `echo "${base64}" | base64 -d > "${filePath}"`];
+      exportProcess.command = ["sh", "-c", `printf '%s' "${base64}" | base64 -d > "${filePath}"`];
       exportProcess.running = true;
     } catch (e) {
       Logger.e("Todo", "Export error: " + e);
@@ -606,6 +610,7 @@ Item {
     var ITEM_PREFIX = "- ";
     var SUB_ITEM_PREFIX = INDENT + "- ";
     var DETAIL_PREFIX = INDENT + INDENT + "- ";
+    var showEmptySections = pluginApi.pluginSettings.exportEmptySections;
 
     // Header
     lines.push("# " + pluginApi.tr("main.export_title"));
@@ -619,11 +624,6 @@ Item {
       var pageId = page.id;
       var pageName = page.name;
 
-      // Page header
-      var pageHeader = pluginApi.tr("main.export_page_header").replace("{pageName}", pageName);
-      lines.push("## " + pageHeader);
-      lines.push("");
-
       // Get todos for this page
       var pageTodos = rawTodos.filter(function (t) {
         return t.pageId === pageId;
@@ -635,17 +635,31 @@ Item {
         return t.completed;
       });
 
-      // Render active todos (always show section, even if empty)
-      var activeSection = pluginApi.tr("main.export_active_section").replace("{count}", activeTodos.length);
-      lines.push("### " + activeSection);
-      lines.push("");
-      renderTodoList(lines, activeTodos, false, INDENT, ITEM_PREFIX, SUB_ITEM_PREFIX, DETAIL_PREFIX);
+      // Skip page if no todos and not showing empty sections
+      if (!showEmptySections && pageTodos.length === 0) {
+        continue;
+      }
 
-      // Render completed todos (always show section, even if empty)
-      var completedSection = pluginApi.tr("main.export_completed_section").replace("{count}", completedTodos.length);
-      lines.push("### " + completedSection);
+      // Page header
+      var pageHeader = pluginApi.tr("main.export_page_header").replace("{pageName}", pageName);
+      lines.push("## " + pageHeader);
       lines.push("");
-      renderTodoList(lines, completedTodos, true, INDENT, ITEM_PREFIX, SUB_ITEM_PREFIX, DETAIL_PREFIX);
+
+      // Render active todos
+      if (activeTodos.length > 0 || showEmptySections) {
+        var activeSection = pluginApi.tr("main.export_active_section").replace("{count}", activeTodos.length);
+        lines.push("### " + activeSection);
+        lines.push("");
+        renderTodoList(lines, activeTodos, false, INDENT, ITEM_PREFIX, SUB_ITEM_PREFIX, DETAIL_PREFIX);
+      }
+
+      // Render completed todos
+      if (completedTodos.length > 0 || showEmptySections) {
+        var completedSection = pluginApi.tr("main.export_completed_section").replace("{count}", completedTodos.length);
+        lines.push("### " + completedSection);
+        lines.push("");
+        renderTodoList(lines, completedTodos, true, INDENT, ITEM_PREFIX, SUB_ITEM_PREFIX, DETAIL_PREFIX);
+      }
 
       // Page separator
       lines.push("---");

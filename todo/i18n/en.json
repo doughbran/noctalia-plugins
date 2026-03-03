@@ -96,6 +96,10 @@
       "placeholder": "e.g. ~/Documents",
       "select_folder": "Select Folder"
     },
+    "export_empty_sections": {
+      "label": "Show Empty Sections",
+      "description": "Show empty Active/Completed sections and pages when exporting"
+    },
     "priority_colors": {
       "label": "Priority Colors",
       "high_label": "High Priority:",

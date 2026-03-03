@@ -14,13 +14,14 @@ ColumnLayout {
   property bool valueShowBackground: pluginApi?.pluginSettings?.showBackground !== undefined ? pluginApi.pluginSettings.showBackground : pluginApi?.manifest?.metadata?.defaultSettings?.showBackground
 
   // Priority color properties
-  property bool valueUseCustomColors: pluginApi?.pluginSettings?.useCustomColors !== undefined ? pluginApi.pluginSettings.useCustomColors : false
+  property bool valueUseCustomColors: pluginApi?.pluginSettings?.useCustomColors !== undefined ? pluginApi.pluginSettings.useCustomColors : pluginApi?.manifest?.metadata?.defaultSettings?.useCustomColors
   property color valueHighPriorityColor: (pluginApi?.pluginSettings?.priorityColors?.high) || (pluginApi?.manifest?.metadata?.defaultSettings?.priorityColors?.high) || Color.mError.toString()
   property color valueMediumPriorityColor: (pluginApi?.pluginSettings?.priorityColors?.medium) || (pluginApi?.manifest?.metadata?.defaultSettings?.priorityColors?.medium) || Color.mPrimary.toString()
   property color valueLowPriorityColor: (pluginApi?.pluginSettings?.priorityColors?.low) || (pluginApi?.manifest?.metadata?.defaultSettings?.priorityColors?.low) || Color.mOnSurfaceVariant.toString()
 
   // Export path property
-  property string valueExportPath: pluginApi?.pluginSettings?.exportPath || pluginApi?.manifest?.metadata?.defaultSettings?.exportPath
+  property string valueExportPath: pluginApi?.pluginSettings?.exportPath !== undefined ? pluginApi?.pluginSettings?.exportPath : pluginApi?.manifest?.metadata?.defaultSettings?.exportPath
+  property bool valueExportEmptySections: pluginApi?.pluginSettings?.exportEmptySections !== undefined ? pluginApi.pluginSettings.exportEmptySections : pluginApi?.manifest?.metadata?.defaultSettings?.exportEmptySections
 
   // Reference to Main.qml instance for centralized data management
   readonly property var mainInstance: pluginApi?.mainInstance
@@ -142,6 +143,21 @@ ColumnLayout {
     buttonTooltip: pluginApi.tr("settings.export_path.select_folder")
     onInputEditingFinished: root.valueExportPath = text
     onButtonClicked: folderPicker.openFilePicker()
+  }
+
+  // Export empty sections setting
+  NToggle {
+    Layout.fillWidth: true
+    label: pluginApi.tr("settings.export_empty_sections.label")
+    description: pluginApi.tr("settings.export_empty_sections.description")
+    checked: root.valueExportEmptySections
+    onToggled: function (checked) {
+      root.valueExportEmptySections = checked;
+      if (mainInstance && mainInstance.pluginApi) {
+        mainInstance.pluginApi.pluginSettings.exportEmptySections = checked;
+        mainInstance.pluginApi.saveSettings();
+      }
+    }
   }
 
   // Folder picker for selecting export path
