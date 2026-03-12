@@ -62,15 +62,15 @@ Rectangle {
   function getTooltipText() {
     switch (fanState) {
     case 0:
-      return pluginApi?.tr("tooltip.standard") || "Standard";
+      return pluginApi?.tr("tooltip.standard");
     case 1:
-      return pluginApi?.tr("tooltip.quiet") || "Quiet";
+      return pluginApi?.tr("tooltip.quiet");
     case 2:
-      return pluginApi?.tr("tooltip.high") || "High-Performance";
+      return pluginApi?.tr("tooltip.high");
     case 3:
-      return pluginApi?.tr("tooltip.full") || "Full-Performance";
+      return pluginApi?.tr("tooltip.full");
     default:
-      return pluginApi?.tr("tooltip.unknown") || "Unknown";
+      return pluginApi?.tr("tooltip.unknown");
     }
   }
 
