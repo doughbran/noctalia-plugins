@@ -54,7 +54,7 @@ Item {
                     }
 
                     NLabel {
-                        label: t("common.vpn") || "VPN"
+                        label: t("common.vpn")
                     }
 
                     NBox {
@@ -63,7 +63,7 @@ Item {
 
                     NIconButton {
                         icon: "refresh"
-                        tooltipText: t("common.refresh") || "Refresh"
+                        tooltipText: t("common.refresh")
                         baseSize: Style.baseWidgetSize * 0.8
                         enabled: true
                         onClicked: {
@@ -75,7 +75,7 @@ Item {
 
                     NIconButton {
                         icon: "close"
-                        tooltipText: t("common.close") || "Close"
+                        tooltipText: t("common.close")
                         baseSize: Style.baseWidgetSize * 0.8
                         onClicked: pluginApi.closePanel(pluginApi.panelOpenScreen)
                     }
@@ -113,7 +113,7 @@ Item {
                             spacing: Style.marginS
 
                             NLabel {
-                                label: t("common.connected") || "Connected"
+                                label: t("common.connected")
                                 Layout.fillWidth: true
                             }
                         }
@@ -153,7 +153,7 @@ Item {
                             spacing: Style.marginS
 
                             NLabel {
-                                label: t("common.disconnected") || "Disconnected"
+                                label: t("common.disconnected")
                                 Layout.fillWidth: true
                             }
                         }
@@ -200,21 +200,21 @@ Item {
                         }
 
                         NText {
-                            text: t("panel.emptyTitle") || "No VPN found"
+                            text: t("panel.emptyTitle")
                             pointSize: Style.fontSizeL
                             color: Color.mOnSurfaceVariant
                             Layout.alignment: Qt.AlignHCenter
                         }
 
                         NText {
-                            text: t("panel.emptyDescription") || "Use Network Manager to add a VPN"
+                            text: t("panel.emptyDescription")
                             pointSize: Style.fontSizeS
                             color: Color.mOnSurfaceVariant
                             Layout.alignment: Qt.AlignHCenter
                         }
 
                         NButton {
-                            text: t("common.refresh") || "Refresh"
+                            text: t("common.refresh")
                             icon: "refresh"
                             Layout.alignment: Qt.AlignHCenter
                             onClicked: { 
