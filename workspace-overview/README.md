@@ -8,6 +8,10 @@ A visually stunning workspace overview with real-time window previews and wallpa
 - **Live Previews**: Real-time rendering of all your open windows using `ScreencopyView`.
 - **Dynamic Sizing**: The panel height automatically adjusts to the number of active workspaces.
 - **Wallpaper Backgrounds**: Automatically pulls your desktop wallpaper to show "life" in every workspace preview.
+- **Configurable Settings**: Right-click the bar widget to access settings like hiding window titles or showing app names.
+- **Workspace Renaming**: Directly rename workspaces from the overview panel by clicking on their labels.
+- **Aggregated Window Titles**: See all open windows in a single line, with a smooth hover-to-scroll (marquee) effect for long names.
+- **Full pt-BR Support**: Fully translated interface into Brazilian Portuguese.
 - **Drag & Drop**: Effortlessly move windows between workspaces by dragging their previews.
 - **Clean Aesthetic**: No visible scrollbars—just your windows and your work.
 

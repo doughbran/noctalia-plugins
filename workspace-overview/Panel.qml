@@ -89,6 +89,7 @@ Item {
 
                     // --- Workspace Component ---
                     delegate: DropArea {
+                        id: workspaceDelegate
                         width: workspaceGrid.cellWidth
                         height: workspaceGrid.cellHeight
 
@@ -97,6 +98,7 @@ Item {
                         
                         // Now you use it directly, without fear of being undefined
                         property int targetWorkspaceId: modelData.id
+                        property bool isEditingName: false
 
                         // Action when dropping the window in this workspace
                         onDropped: (drop) => {
@@ -143,30 +145,115 @@ Item {
                                 anchors.margins: Style.marginM / 2
                                 spacing: Style.marginS
 
-                                NText {
-                                    text: modelData.name !== "" ? modelData.name : "Workspace " + modelData.id
-                                    font.weight: Font.Bold
-                                    color: workspaceBg.isActiveWorkspace ? Color.mOnPrimary : Color.mOnSurface
+                                Item {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 24 * Style.uiScaleRatio
                                     Layout.alignment: Qt.AlignHCenter
+                                    
+                                    // Special Workspace detection
+                                    readonly property bool isSpecial: modelData.id === -98 || (modelData.name && modelData.name.indexOf("special:") === 0)
+
+                                    NText {
+                                        visible: !workspaceDelegate.isEditingName
+                                        anchors.centerIn: parent
+                                        text: {
+                                            if (parent.isSpecial) return "Workspace Especial";
+                                            
+                                            const showName = pluginApi?.pluginSettings?.showWorkspaceName ?? false;
+                                            if (showName) {
+                                                if (modelData.name !== "" && modelData.name !== modelData.id.toString()) return modelData.name;
+                                                return "Workspace " + modelData.id;
+                                            } else {
+                                                return modelData.id.toString();
+                                            }
+                                        }
+                                        font.weight: Font.Bold
+                                        color: workspaceBg.isActiveWorkspace ? Color.mOnPrimary : Color.mOnSurface
+                                        
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            cursorShape: parent.parent.isSpecial ? Qt.ArrowCursor : Qt.PointingHandCursor
+                                            enabled: !parent.parent.isSpecial
+                                            onClicked: workspaceDelegate.isEditingName = true
+                                        }
+                                    }
+
+                                    TextInput {
+                                        id: nameInput
+                                        visible: workspaceDelegate.isEditingName
+                                        anchors.centerIn: parent
+                                        text: modelData.name !== "" ? modelData.name : modelData.id.toString()
+                                        color: workspaceBg.isActiveWorkspace ? Color.mOnPrimary : Color.mOnSurface
+                                        font.bold: true
+                                        font.pixelSize: Style.fontSizeM
+                                        focus: visible
+                                        selectByMouse: true
+                                        horizontalAlignment: TextInput.AlignHCenter
+
+                                        onAccepted: {
+                                            Hyprland.dispatch("renameworkspace " + modelData.id + " " + text);
+                                            workspaceDelegate.isEditingName = false;
+                                        }
+                                        
+                                        onActiveFocusChanged: {
+                                            if (!activeFocus) workspaceDelegate.isEditingName = false;
+                                        }
+                                    }
                                 }
 
-                                // List of active windows (Titles)
-                                Column {
+                                Item {
+                                    visible: !(pluginApi?.pluginSettings?.hideWindowTitle ?? false)
                                     Layout.fillWidth: true
                                     Layout.preferredHeight: 20 * Style.uiScaleRatio
-                                    spacing: 1 * Style.uiScaleRatio
                                     clip: true
-                                    
-                                    Repeater {
-                                        model: modelData.toplevels || null
-                                        delegate: NText {
-                                            width: 199.663 * Style.uiScaleRatio // Precise width
-                                            anchors.horizontalCenter: parent.horizontalCenter
-                                            text: "• " + (modelData.title || "App")
-                                            pointSize: 8 * Style.uiScaleRatio
-                                            elide: Text.ElideRight
-                                            color: workspaceBg.isActiveWorkspace ? Color.mOnPrimary : Color.mOnSurfaceVariant
-                                            horizontalAlignment: Text.AlignHCenter
+
+                                    Row {
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        spacing: 4 * Style.uiScaleRatio
+                                        height: parent.height
+
+                                        Repeater {
+                                            model: modelData.toplevels || null
+                                            delegate: Item {
+                                                id: windowItem
+                                                width: Math.min(innerText.implicitWidth, 180 * Style.uiScaleRatio)
+                                                height: 20 * Style.uiScaleRatio
+                                                clip: true
+                                                
+                                                property bool isHovered: mouseArea.containsMouse
+
+                                                NText {
+                                                    id: innerText
+                                                    property var win: modelData
+                                                    text: {
+                                                        const showApp = pluginApi?.pluginSettings?.showAppName ?? false;
+                                                        const label = showApp 
+                                                            ? (win.class || win.lastIpcObject?.class || win.initialClass || "Aplicativo") 
+                                                            : (win.title || "Aplicativo");
+                                                        return (index === 0 ? "" : "• ") + label;
+                                                    }
+                                                    pointSize: 8 * Style.uiScaleRatio
+                                                    color: workspaceBg.isActiveWorkspace ? Color.mOnPrimary : Color.mOnSurfaceVariant
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    
+                                                    // Scrolling animation
+                                                    NumberAnimation on x {
+                                                        id: scrollAnim
+                                                        from: 0
+                                                        to: -(innerText.implicitWidth - windowItem.width)
+                                                        duration: Math.max(1000, (innerText.implicitWidth - windowItem.width) * 30)
+                                                        running: windowItem.isHovered && innerText.implicitWidth > windowItem.width
+                                                        loops: Animation.Infinite
+                                                        onRunningChanged: if (!running) x = 0
+                                                    }
+                                                }
+                                                
+                                                MouseArea {
+                                                    id: mouseArea
+                                                    anchors.fill: parent
+                                                    hoverEnabled: true
+                                                }
+                                            }
                                         }
                                     }
                                 }

@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import qs.Commons
 import qs.Widgets
+import qs.Services.UI
+import qs.Services.System
 
 Item {
     id: root
@@ -25,15 +27,38 @@ Item {
         color: mouseArea.containsMouse ? Color.mPrimary : Color.mOnSurface
     }
 
+    NPopupContextMenu {
+        id: contextMenu
+        model: [
+            {
+                "label": "Configurações",
+                "action": "settings",
+                "icon": "settings"
+            }
+        ]
+        onTriggered: action => {
+            contextMenu.close();
+            PanelService.closeContextMenu(screen);
+            if (action === "settings") {
+                BarService.openPluginSettings(screen, pluginApi.manifest);
+            }
+        }
+    }
+
     MouseArea {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         
-        onClicked: {
-            if (pluginApi) {
-                pluginApi.openPanel(root.screen, root)
+        onClicked: (mouse) => {
+            if (mouse.button === Qt.RightButton) {
+                PanelService.showContextMenu(contextMenu, root, screen);
+            } else {
+                if (pluginApi) {
+                    pluginApi.openPanel(root.screen, root)
+                }
             }
         }
     }

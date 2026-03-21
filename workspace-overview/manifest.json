@@ -1,12 +1,12 @@
 {
   "id": "workspace-overview",
-  "name": "Workspace Overview for Hyprland",
-  "version": "1.0.0",
+  "name": "Panorama de Workspaces para Hyprland",
+  "version": "1.1.0",
   "minNoctaliaVersion": "3.6.0",
   "author": "doughbran",
   "license": "MIT",
   "repository": "https://github.com/noctalia-dev/noctalia-plugins",
-  "description": "Workspace overview with live window previews and wallpaper backgrounds for Hyprland.",
+  "description": "Panorama de workspaces com visualização de janelas em tempo real e fundos de tela para o Hyprland.",
   "tags": [
     "Hyprland",
     "Bar",
@@ -16,12 +16,17 @@
   "entryPoints": {
     "panel": "Panel.qml",
     "barWidget": "BarWidget.qml",
-    "main": "Main.qml"
+    "main": "Main.qml",
+    "settings": "Settings.qml"
   },
   "dependencies": {
     "plugins": []
   },
   "metadata": {
-    "defaultSettings": {}
+    "defaultSettings": {
+      "showWorkspaceName": false,
+      "hideWindowTitle": false,
+      "showAppName": false
+    }
   }
 }
