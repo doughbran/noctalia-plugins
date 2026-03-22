@@ -31,7 +31,7 @@ Item {
         id: contextMenu
         model: [
             {
-                "label": "Configurações",
+                "label": "Settings",
                 "action": "settings",
                 "icon": "settings"
             }

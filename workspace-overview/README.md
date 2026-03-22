@@ -11,7 +11,7 @@ A visually stunning workspace overview with real-time window previews and wallpa
 - **Configurable Settings**: Right-click the bar widget to access settings like hiding window titles or showing app names.
 - **Workspace Renaming**: Directly rename workspaces from the overview panel by clicking on their labels.
 - **Aggregated Window Titles**: See all open windows in a single line, with a smooth hover-to-scroll (marquee) effect for long names.
-- **Full pt-BR Support**: Fully translated interface into Brazilian Portuguese.
+- **Full English Support**: Fully translated interface into English.
 - **Drag & Drop**: Effortlessly move windows between workspaces by dragging their previews.
 - **Clean Aesthetic**: No visible scrollbars—just your windows and your work.
 

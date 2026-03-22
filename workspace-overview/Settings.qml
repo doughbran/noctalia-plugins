@@ -64,8 +64,8 @@ ColumnLayout {
         NToggle {
             id: showWorkspaceNameToggle
             anchors.fill: parent
-            label: "Exibir Nome do Workspace"
-            description: "Exibe o nome do workspace em vez de apenas o número."
+            label: "Show Workspace Name"
+            description: "Display the workspace name instead of just the number."
             checked: root.editShowWorkspaceName
         }
         
@@ -90,8 +90,8 @@ ColumnLayout {
         NToggle {
             id: hideWindowTitlesToggle
             anchors.fill: parent
-            label: "Esconder Títulos das Janelas"
-            description: "Não exibe a lista de janelas abertas no panorama."
+            label: "Hide Window Titles"
+            description: "Do not display the list of open windows in the overview."
             checked: root.editHideWindowTitle
         }
         
@@ -114,8 +114,8 @@ ColumnLayout {
         NToggle {
             id: showAppNameToggle
             anchors.fill: parent
-            label: "Exibir Nome do Aplicativo"
-            description: "Exibe o nome da classe do aplicativo em vez do título da janela."
+            label: "Show Application Name"
+            description: "Display the application class name instead of the window title."
             checked: root.editShowAppName
         }
         

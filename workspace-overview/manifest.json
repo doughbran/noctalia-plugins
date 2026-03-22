@@ -1,12 +1,12 @@
 {
   "id": "workspace-overview",
-  "name": "Panorama de Workspaces para Hyprland",
+  "name": "Workspace Overview for Hyprland",
   "version": "1.1.0",
   "minNoctaliaVersion": "3.6.0",
   "author": "doughbran",
   "license": "MIT",
   "repository": "https://github.com/noctalia-dev/noctalia-plugins",
-  "description": "Panorama de workspaces com visualização de janelas em tempo real e fundos de tela para o Hyprland.",
+  "description": "Workspace overview with real-time window visualization and wallpapers for Hyprland.",
   "tags": [
     "Hyprland",
     "Bar",
